@@ -1,0 +1,1 @@
+# Nice fetch.ai adapter
