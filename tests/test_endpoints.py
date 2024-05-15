@@ -17,6 +17,14 @@ class MockResponse:
         return self.json_data 
 
 
+@pytest.fixture
+def client():
+    return TestClient(app)
+
+
+
+
+
 
 # happy path 
 def test_send_query(client,mocker):
