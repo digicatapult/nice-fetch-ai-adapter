@@ -15,28 +15,25 @@ async def test_drcp_event_handler_response(
     ...
     """
     payload = {
-  "createdAt": "2024-05-20T08:51:21.630Z",
-  "response": {
-    "jsonrpc": "string",
-    "result": "string",
-    "error": {
-      "code": -32601,
-      "message": "string",
-      "data": "string"
-    },
-    "id": "string"
-  },
-  "connectionId": "string",
-  "role": "client",
-  "state": "request-sent",
-  "threadId": "string",
-  "id": "string"
-}
+        "createdAt": "2024-05-20T08:51:21.630Z",
+        "response": {
+            "jsonrpc": "string",
+            "result": "string",
+            "error": {"code": -32601, "message": "string", "data": "string"},
+            "id": "string",
+        },
+        "connectionId": "string",
+        "role": "client",
+        "state": "request-sent",
+        "threadId": "string",
+        "id": "string",
+    }
     response_pat = await client.post(
         app.url_path_for("webhooks-drpc"),
         json=payload,
     )
     assert response_pat.status_code == status.HTTP_200_OK
+
 
 async def test_drcp_event_handler_query(
     app: FastAPI,
@@ -47,28 +44,27 @@ async def test_drcp_event_handler_query(
     ...
     """
     payload = {
-  "createdAt": "2024-05-20T08:51:21.630Z",
-    "request": {
-    "jsonrpc": "string",
-    "method": "string",
-    "params": [
-      "string"
-    ],
-    "id": "string"
-  },
-  "connectionId": "string",
-  "role": "server",
-  "state": "request-sent",
-  "threadId": "string",
-  "id": "string"
-}
+        "createdAt": "2024-05-20T08:51:21.630Z",
+        "request": {
+            "jsonrpc": "string",
+            "method": "string",
+            "params": ["string"],
+            "id": "string",
+        },
+        "connectionId": "string",
+        "role": "server",
+        "state": "request-sent",
+        "threadId": "string",
+        "id": "string",
+    }
     response_pat = await client.post(
         app.url_path_for("webhooks-drpc"),
         json=payload,
     )
     assert response_pat.status_code == status.HTTP_200_OK
 
-  # Sad path tests 
+
+# Sad path tests
 async def test_receive_response_422(
     app: FastAPI,
     client: AsyncClient,
@@ -76,12 +72,13 @@ async def test_receive_response_422(
     """
     ...
     """
-    payload = {"some":"wrong body"}
+    payload = {"some": "wrong body"}
     response_pat = await client.post(
         app.url_path_for("webhooks-drpc"),
         json=payload,
     )
     assert response_pat.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
 
 async def test_receive_response_500(
     app: FastAPI,
@@ -91,37 +88,32 @@ async def test_receive_response_500(
     ...
     """
     payload = {
-  "createdAt": "2024-05-20T08:51:21.630Z",
-  "request": {
-    "jsonrpc": "string",
-    "method": "string",
-    "params": [
-      "string"
-    ],
-    "id": "string"
-  },
-  "response": {
-    "jsonrpc": "string",
-    "result": "string",
-    "error": {
-      "code": -32601,
-      "message": "string",
-      "data": "string"
-    },
-    "id": "string"
-  },
-  "connectionId": "string",
-  "role": "client",
-  "state": "request-sent",
-  "threadId": "string",
-  "id": "string"
-}
+        "createdAt": "2024-05-20T08:51:21.630Z",
+        "request": {
+            "jsonrpc": "string",
+            "method": "string",
+            "params": ["string"],
+            "id": "string",
+        },
+        "response": {
+            "jsonrpc": "string",
+            "result": "string",
+            "error": {"code": -32601, "message": "string", "data": "string"},
+            "id": "string",
+        },
+        "connectionId": "string",
+        "role": "client",
+        "state": "request-sent",
+        "threadId": "string",
+        "id": "string",
+    }
     response_pat = await client.post(
         app.url_path_for("webhooks-drpc"),
         json=payload,
     )
     assert response_pat.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
- 
+
+
 async def test_drcp_event_handler_query_wrong_role(
     app: FastAPI,
     client: AsyncClient,
@@ -130,26 +122,25 @@ async def test_drcp_event_handler_query_wrong_role(
     ...
     """
     payload = {
-  "createdAt": "2024-05-20T08:51:21.630Z",
-    "request": {
-    "jsonrpc": "string",
-    "method": "string",
-    "params": [
-      "string"
-    ],
-    "id": "string"
-  },
-  "connectionId": "string",
-  "role": "client",
-  "state": "request-sent",
-  "threadId": "string",
-  "id": "string"
-}
+        "createdAt": "2024-05-20T08:51:21.630Z",
+        "request": {
+            "jsonrpc": "string",
+            "method": "string",
+            "params": ["string"],
+            "id": "string",
+        },
+        "connectionId": "string",
+        "role": "client",
+        "state": "request-sent",
+        "threadId": "string",
+        "id": "string",
+    }
     response_pat = await client.post(
         app.url_path_for("webhooks-drpc"),
         json=payload,
     )
     assert response_pat.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
+
 
 async def test_drcp_event_handler_response_wrong_role(
     app: FastAPI,
@@ -159,28 +150,25 @@ async def test_drcp_event_handler_response_wrong_role(
     ...
     """
     payload = {
-  "createdAt": "2024-05-20T08:51:21.630Z",
-  "response": {
-    "jsonrpc": "string",
-    "result": "string",
-    "error": {
-      "code": -32601,
-      "message": "string",
-      "data": "string"
-    },
-    "id": "string"
-  },
-  "connectionId": "string",
-  "role": "server",
-  "state": "request-sent",
-  "threadId": "string",
-  "id": "string"
-}
+        "createdAt": "2024-05-20T08:51:21.630Z",
+        "response": {
+            "jsonrpc": "string",
+            "result": "string",
+            "error": {"code": -32601, "message": "string", "data": "string"},
+            "id": "string",
+        },
+        "connectionId": "string",
+        "role": "server",
+        "state": "request-sent",
+        "threadId": "string",
+        "id": "string",
+    }
     response_pat = await client.post(
         app.url_path_for("webhooks-drpc"),
         json=payload,
     )
     assert response_pat.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
+
 
 async def test_drcp_event_handler_query_fail_500(
     app: FastAPI,
@@ -191,21 +179,19 @@ async def test_drcp_event_handler_query_fail_500(
     ...
     """
     payload = {
-  "createdAt": "2024-05-20T08:51:21.630Z",
-    "request": {
-    "jsonrpc": "string",
-    "method": "string",
-    "params": [
-      "string"
-    ],
-    "id": "string"
-  },
-  "connectionId": "string",
-  "role": "server",
-  "state": "request-sent",
-  "threadId": "string",
-  "id": "string"
-}
+        "createdAt": "2024-05-20T08:51:21.630Z",
+        "request": {
+            "jsonrpc": "string",
+            "method": "string",
+            "params": ["string"],
+            "id": "string",
+        },
+        "connectionId": "string",
+        "role": "server",
+        "state": "request-sent",
+        "threadId": "string",
+        "id": "string",
+    }
     response_pat = await client.post(
         app.url_path_for("webhooks-drpc"),
         json=payload,
