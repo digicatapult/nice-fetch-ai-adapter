@@ -3,7 +3,7 @@ name = "nice-fetch-ai-adapter"
 version = "0.1.0"
 description = ""
 authors = ["Helena Adamkova <58051865+Ellenn-A@users.noreply.github.com>"]
-license = "MIT"
+license = "Apache2"
 readme = "README.md"
 
 [tool.poetry.scripts]
