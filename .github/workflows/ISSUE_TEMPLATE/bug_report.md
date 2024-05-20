@@ -6,15 +6,15 @@ ticket: Ticket number for this bug (if applicable)
 
 <!--
 
-Have you read {project_name}'s Code of Conduct? By filing an Issue, you are expected to comply with it, including treating everyone with respect: https://github.com/digicatapult/{project_module_name}/.github/blob/main/CODE_OF_CONDUCT.md
+Have you read nice-fetch-ai-adapter's Code of Conduct? By filing an Issue, you are expected to comply with it, including treating everyone with respect: https://github.com/digicatapult/nice-fetch-ai-adapter/.github/blob/main/CODE_OF_CONDUCT.md
 
 -->
 
 ### Prerequisites
 
 - [ ] Put an X between the brackets on this line if you have done all of the following:
-  - Checked the FAQs for common solutions: <https://github.com/digicatapult/{project_module_name}/blob/main/CONTRIBUTING.md/#FAQs>
-  - Checked that your issue isn't already filed: <https://github.com/issues?utf8=✓&q=is%3Aissue+user%3A{project_module_name}>
+  - Checked the FAQs for common solutions: <https://github.com/digicatapult/nice-fetch-ai-adapter/blob/main/CONTRIBUTING.md/#FAQs>
+  - Checked that your issue isn't already filed: <https://github.com/issues?utf8=✓&q=is%3Aissue+user%3Anice-fetch-ai-adapter>
 
 ### Description
 
