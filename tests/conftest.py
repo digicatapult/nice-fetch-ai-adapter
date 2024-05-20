@@ -1,8 +1,9 @@
 import pytest
-from fastapi import FastAPI
-from asgi_lifespan import LifespanManager
 import pytest_asyncio
+from asgi_lifespan import LifespanManager
+from fastapi import FastAPI
 from httpx import AsyncClient
+
 
 @pytest.fixture
 def app() -> FastAPI:

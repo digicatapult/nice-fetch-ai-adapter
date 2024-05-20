@@ -1,12 +1,12 @@
-from fastapi import APIRouter,HTTPException
-from typing import Optional, List, Any
 from datetime import datetime
 from enum import IntEnum, StrEnum
+from typing import Any, List, Optional
+
+import httpx
+from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-import httpx
-import requests
-from uagents import Model 
+from uagents import Model
 
 veritableUrl = "http://localhost:3010"
 peerUrl="http://localhost:3001/api"
