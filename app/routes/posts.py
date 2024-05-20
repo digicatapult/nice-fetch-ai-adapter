@@ -3,13 +3,14 @@ from enum import IntEnum, StrEnum
 from typing import Any, List, Optional
 
 import httpx
+from core.config import settings
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from uagents import Model
 
-veritableUrl = "http://localhost:3010"
-peerUrl = "http://localhost:3001/api"
+veritableUrl = settings.VERITABLE_URL
+peerUrl = settings.PEER_URL
 
 
 class Query(BaseModel):

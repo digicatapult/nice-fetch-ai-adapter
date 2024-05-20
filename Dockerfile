@@ -1,6 +1,5 @@
 FROM python:3.12-slim
 LABEL MAINTAINER Digital Catapult
-# LABEL org.opencontainers.image.source=https://github.com/CDECatapult/soniclabs-resultsmanager
 
 WORKDIR /app
 
