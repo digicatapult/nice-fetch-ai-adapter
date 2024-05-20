@@ -7,6 +7,7 @@ pytestmark = pytest.mark.asyncio
 
 # happy path tests
 
+
 async def test_receive_response(
     app: FastAPI,
     client: AsyncClient,
@@ -15,16 +16,17 @@ async def test_receive_response(
     """
     ...
     """
-    payload = {"message":{"content": "some test message"}}
+    payload = {"message": {"content": "some test message"}}
     response_pat = await client.post(
         app.url_path_for("receive-response"),
         json=payload,
     )
     assert response_pat.status_code == status.HTTP_200_OK
-  
 
-  # Sad path tests 
-    
+
+# Sad path tests
+
+
 async def test_receive_response_fail_500(
     app: FastAPI,
     client: AsyncClient,
@@ -33,20 +35,9 @@ async def test_receive_response_fail_500(
     """
     ...
     """
-    payload = {"message":{"content": "some test message"}}
+    payload = {"message": {"content": "some test message"}}
     response_pat = await client.post(
         app.url_path_for("receive-response"),
         json=payload,
     )
     assert response_pat.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
-  
-  
- 
-
-
-
-
-
-
-
-

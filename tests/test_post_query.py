@@ -14,14 +14,16 @@ async def test_post_query(
     """
     ...
     """
-    payload = {"message":{"content": "some test message"}}
+    payload = {"message": {"content": "some test message"}}
     response_pat = await client.post(
         app.url_path_for("test-name"),
         json=payload,
     )
     assert response_pat.status_code == status.HTTP_202_ACCEPTED
 
+
 # sad path tests
+
 
 async def test_post_query_wrong_body(
     app: FastAPI,
@@ -30,12 +32,13 @@ async def test_post_query_wrong_body(
     """
     ...
     """
-    payload = {"wrongBody":{}}
+    payload = {"wrongBody": {}}
     response_pat = await client.post(
         app.url_path_for("test-name"),
         json=payload,
     )
     assert response_pat.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
 
 async def test_post_query_failed_500(
     app: FastAPI,
@@ -45,10 +48,9 @@ async def test_post_query_failed_500(
     """
     ...
     """
-    payload = {"message":{"content": "some test message"}}
+    payload = {"message": {"content": "some test message"}}
     response_pat = await client.post(
         app.url_path_for("test-name"),
         json=payload,
     )
     assert response_pat.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
- 
