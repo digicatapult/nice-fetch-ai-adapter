@@ -2,7 +2,7 @@ import pytest
 from fastapi import FastAPI
 from asgi_lifespan import LifespanManager
 import pytest_asyncio
-from httpx import AsyncClient, ASGITransport
+from httpx import AsyncClient
 
 @pytest.fixture
 def app() -> FastAPI:
@@ -29,7 +29,7 @@ async def client(app: FastAPI) -> AsyncClient:
 
 
 @pytest.fixture
-def test_forward_query_success_mock_202(mocker) -> None:
+def test_post_query_success_mock_202(mocker) -> None:
     """
     Test return data for the 202 response from veritable when forwarding a query.
     """
@@ -40,3 +40,79 @@ def test_forward_query_success_mock_202(mocker) -> None:
             {},
         ],
     )
+
+@pytest.fixture
+def test_receive_response_success_mock_200(mocker) -> None:
+    """
+    Test return data for the 200 receive response forwarding to veritable.
+    """
+    mocker.patch(
+        "routes.posts.postResponseToVeritable",
+        return_value=[
+            "200",
+            {},
+        ],
+    )
+@pytest.fixture
+def test_receive_response_fail_mock_500(mocker) -> None:
+    """
+    Test return data for the 500 receive response forwarding to veritable.
+    """
+    mocker.patch(
+        "routes.posts.postResponseToVeritable",
+        return_value=[
+            "500",
+            {},
+        ],
+    )
+
+@pytest.fixture
+def test_drcp_event_handler_response_success_mock_200(mocker) -> None:
+    """
+    Test return data for forwarding data from the "/webhooks/drpc" endpoint to /receive-response endpoint in peerAPI.
+    """
+    mocker.patch(
+        "routes.posts.peerReceivesResponse",
+        return_value=[
+            "200",
+            {},
+        ],
+    )
+@pytest.fixture
+def test_drcp_event_handler_query_success_mock_200(mocker) -> None:
+    """
+    Test return data for forwarding data from the "/webhooks/drpc" endpoint to /receive-query endpoint in peerAPI.
+    """
+    mocker.patch(
+        "routes.posts.peerReceivesQuery",
+        return_value=[
+            "200",
+            {},
+        ],
+    )
+
+@pytest.fixture
+def test_drcp_event_handler_query_fail_mock_500(mocker) -> None:
+    """
+    Test failed return data for forwarding data from the "/webhooks/drpc" endpoint to /receive-query endpoint in peerAPI.
+    """
+    mocker.patch(
+        "routes.posts.peerReceivesQuery",
+        return_value=[
+            "500",
+            {},
+        ],
+    )
+@pytest.fixture
+def test_post_query_fail_mock_500(mocker) -> None:
+    """
+    Test return data for 500 response from veritable when forwarding a query.
+    """
+    mocker.patch(
+        "routes.posts.postToVeritable",
+        return_value=[
+            "500",
+            {},
+        ],
+    )
+ 
