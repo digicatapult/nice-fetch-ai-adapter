@@ -6,7 +6,7 @@ ticket: Ticket number for this bug (if applicable)
 
 <!--
 
-Have you read nice-fetch-ai-adapter's Code of Conduct? By filing an Issue, you are expected to comply with it, including treating everyone with respect: https://github.com/digicatapult/nice-fetch-ai-adapter/.github/blob/main/CODE_OF_CONDUCT.md
+Have you read nice-fetch-ai-adapter's Code of Conduct? By filing an Issue, you are expected to comply with it, including treating everyone with respect: https://github.com/digicatapult/nice-fetch-ai-adapter/blob/main/CODE_OF_CONDUCT.md
 
 -->
 

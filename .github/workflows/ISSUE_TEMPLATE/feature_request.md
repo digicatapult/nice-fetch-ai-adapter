@@ -6,7 +6,7 @@ ticket: Ticket number for this feature (if applicable)
 
 <!--
 
-Have you read nice-fetch-ai-adapter's Code of Conduct? By filing an Issue, you are expected to comply with it, including treating everyone with respect: https://github.com/digicatapult/nice-fetch-ai-adapter/.github/blob/main/CODE_OF_CONDUCT.md
+Have you read nice-fetch-ai-adapter's Code of Conduct? By filing an Issue, you are expected to comply with it, including treating everyone with respect: https://github.com/digicatapult/nice-fetch-ai-adapter/blob/main/CODE_OF_CONDUCT.md
 
 ---
 Also note that the Digital Catapult team has finite resources so we have limited opportunity to work on feature requests. If we're interested in a particular feature however, we'll follow up and ask you to submit an RFC to talk about it in more detail.
