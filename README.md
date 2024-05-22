@@ -1,4 +1,14 @@
-# Prerequisites:
+# nice-fetch-ai-adapter
+
+The purpose of this repository is to allow interaction between nice-agent-portal (PEER API), Veritable Peer and Cmbridge's 'intelligent agent'.
+The endpoints in this repository are:
+| endpoint | usage |
+|----------|----------|
+| "/send-query" | accepts query from Peer API, forwards it to Sample Agent & then to Veritable Peer |
+| "/webhooks/drpc"| accepts posts from veritable Cloudagent and passes them to PeerApi. These are either queries for peerApi or query responses for peer API |
+| "/receive-response" | This endpoint receives information from chainvine and passes it to Veritable as a response |
+
+### Prerequisites:
 
 python 3.12 and higher and poetry installed
 
