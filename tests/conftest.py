@@ -51,7 +51,7 @@ def test_agent_query_mock(mocker) -> None:
     mocker.patch(
         "routes.posts.agent_query",
         return_value=[
-            {"Successful query response from the Sample Agent"},
+            {"text":"Successful query response from the Sample Agent"},
         ],
     )
 

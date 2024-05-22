@@ -21,7 +21,7 @@ class DrcpQueryFromPeerApi(Model):
     jsonrpc: str
     method: str = Field(default="query", const=True)
     params: List[Any]
-    id: Union[str, UUID]
+    id: str | int
 
 
 class DrpcRequestObject(Model):
@@ -67,7 +67,7 @@ class DrpcState(StrEnum):
 class DrpcResponseForVeritableApi(Model):
     jsonrpc: str
     result: Any
-    id: Union[str, UUID]
+    id:  str | int
 
 
 class DrpcEvent(Model):
@@ -88,7 +88,7 @@ router = APIRouter()
 async def agent_query(req):
     response = await query(destination=AGENT_ADDRESS, message=req, timeout=15.0)
     data = json.loads(response.decode_payload())
-    return data
+    return [data]
 
 
 async def postToVeritable(req: DrcpQueryFromPeerApi) -> JSONResponse:
@@ -99,7 +99,7 @@ async def postToVeritable(req: DrcpQueryFromPeerApi) -> JSONResponse:
 
 async def postResponseToVeritable(req: DrpcResponseForVeritableApi) -> JSONResponse:
     async with httpx.AsyncClient() as client:
-        response = client.post(f"{veritableUrl}/drcp/response", json=req)
+        response =await  client.post(f"{veritableUrl}/drcp/response", json=req)
         return [response.status, response.json()]
 
 
@@ -120,13 +120,14 @@ async def peerReceivesQuery(req: DrpcEvent) -> JSONResponse:
 async def send_query(req: DrcpQueryFromPeerApi):
     try:
         agentQueryResp = await agent_query(req)
-        expected_response = [{"Successful query response from the Sample Agent"}]
+        expected_response = [{"text":"Successful query response from the Sample Agent"}]
         if agentQueryResp != expected_response:
             raise ValueError(
                 f"Query Agent returned unexpected response. Response returned: {agentQueryResp}"
             )
         # do sth based on the agentQueryResponse??
-        response = await postToVeritable(req)
+        req_dict = dict(req)
+        response = await postToVeritable(req_dict)
         if response[0] != "202":
             raise ValueError("Response status is not 202")
         return response
@@ -176,7 +177,8 @@ async def drpc_event_handler(req: DrpcEvent):
 @router.post("/receive-response", name="receive-response", status_code=200)
 async def receive_response(resp: DrpcResponseForVeritableApi):
     try:
-        response = await postResponseToVeritable(resp)
+        resp_dict= dict(resp)
+        response = await postResponseToVeritable(resp_dict)
         if response[0] != "200":
             raise ValueError("Response status is not 200")
         return response

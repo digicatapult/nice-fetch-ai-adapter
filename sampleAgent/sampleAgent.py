@@ -14,7 +14,7 @@ class DrcpQueryFromPeerApi(Model):
     jsonrpc: str
     method: str = Field(default="query", const=True)
     params: List[Any]
-    id: Union[str, UUID]
+    id: str | int
 
 
 class Response(Model):
