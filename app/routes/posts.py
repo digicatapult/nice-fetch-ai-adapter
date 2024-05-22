@@ -5,8 +5,6 @@ from typing import Any, List, Optional, Union
 from uuid import UUID
 
 import httpx
-
-# from agentQuery.agentQuery import agent_query
 from core.config import settings
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
@@ -17,9 +15,6 @@ from uagents.query import query
 veritableUrl = settings.VERITABLE_URL
 peerUrl = settings.PEER_URL
 AGENT_ADDRESS = settings.AGENT_ADDRESS
-
-# class QueryFromPeerApi(Model):
-#     message:dict
 
 
 class DrcpQueryFromPeerApi(Model):
@@ -69,9 +64,6 @@ class DrpcState(StrEnum):
     Completed = ("completed",)
 
 
-# RPC Response example
-# --> {"jsonrpc": "2.0", "method": "subtract", "params": [23, 42], "id": 2}
-# <-- {"jsonrpc": "2.0", "result": -19, "id": 2}
 class DrpcResponseForVeritableApi(Model):
     jsonrpc: str
     result: Any
@@ -142,9 +134,8 @@ async def send_query(req: DrcpQueryFromPeerApi):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.post(
-    "/webhooks/drpc", name="webhooks-drpc", status_code=200
-)  # from veritable cloudagent to peerAPI
+# from veritable cloudagent to peerAPI
+@router.post("/webhooks/drpc", name="webhooks-drpc", status_code=200)
 async def drpc_event_handler(req: DrpcEvent):
     try:
         req_dict = dict(req)
@@ -181,10 +172,9 @@ async def drpc_event_handler(req: DrpcEvent):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.post(
-    "/receive-response", name="receive-response", status_code=200
-)  # this receives response from chainvine and it forwards info to veritable
-async def receive_response(resp: DrpcResponseForVeritableApi):  # basic RPC response
+# this receives response from chainvine and it forwards info to veritable
+@router.post("/receive-response", name="receive-response", status_code=200)
+async def receive_response(resp: DrpcResponseForVeritableApi):
     try:
         response = await postResponseToVeritable(resp)
         if response[0] != "200":
