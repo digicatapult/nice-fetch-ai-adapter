@@ -20,11 +20,13 @@ peerUrl = settings.PEER_URL
 # class QueryFromPeerApi(Model):
 #     message:dict
 
-class DrcpQueryFromPeerApi(Model): 
-  jsonrpc: str
-  method: str = Field(default="query", const=True)
-  params: List[Any]
-  id: Union[str, UUID]
+
+class DrcpQueryFromPeerApi(Model):
+    jsonrpc: str
+    method: str = Field(default="query", const=True)
+    params: List[Any]
+    id: Union[str, UUID]
+
 
 class DrpcRequestObject(Model):
     jsonrpc: str
@@ -70,9 +72,9 @@ class DrpcState(StrEnum):
 # --> {"jsonrpc": "2.0", "method": "subtract", "params": [23, 42], "id": 2}
 # <-- {"jsonrpc": "2.0", "result": -19, "id": 2}
 class DrpcResponseForVeritableApi(Model):
-  jsonrpc: str
-  result: Any
-  id: Union[str, UUID]
+    jsonrpc: str
+    result: Any
+    id: Union[str, UUID]
 
 
 class DrpcEvent(Model):
@@ -89,7 +91,9 @@ class DrpcEvent(Model):
 
 router = APIRouter()
 
-AGENT_ADDRESS = 'agent1qt8q20p0vsp7y5dkuehwkpmsppvynxv8esg255fwz6el68rftvt5klpyeuj'
+AGENT_ADDRESS = "agent1qt8q20p0vsp7y5dkuehwkpmsppvynxv8esg255fwz6el68rftvt5klpyeuj"
+
+
 async def agent_query(req):
     response = await query(destination=AGENT_ADDRESS, message=req, timeout=15.0)
     data = json.loads(response.decode_payload())
@@ -119,15 +123,18 @@ async def peerReceivesQuery(req: DrpcEvent) -> JSONResponse:
         response = await client.post(f"{peerUrl}/receive-query", json=req)
         return [response.status, response.json()]
 
-# Query from PeerApi to query agent & veritable 
+
+# Query from PeerApi to query agent & veritable
 @router.post("/send-query", name="test-name", status_code=202)
-async def send_query(req: DrcpQueryFromPeerApi):  
+async def send_query(req: DrcpQueryFromPeerApi):
     try:
         agentQueryResp = await agent_query(req)
-        expected_response = [{'Successful query response from the Sample Agent'}]
+        expected_response = [{"Successful query response from the Sample Agent"}]
         if agentQueryResp != expected_response:
-            raise ValueError(f"Query Agent returned unexpected response. Response returned: {agentQueryResp}")
-        #do sth based on the agentQueryResponse?? 
+            raise ValueError(
+                f"Query Agent returned unexpected response. Response returned: {agentQueryResp}"
+            )
+        # do sth based on the agentQueryResponse??
         response = await postToVeritable(req)
         if response[0] != "202":
             raise ValueError("Response status is not 202")

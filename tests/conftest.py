@@ -41,6 +41,8 @@ def test_post_query_success_mock_202(mocker) -> None:
             {},
         ],
     )
+
+
 @pytest.fixture
 def test_agent_query_mock(mocker) -> None:
     """

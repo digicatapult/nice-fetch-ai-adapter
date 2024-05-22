@@ -16,13 +16,11 @@ async def test_post_query(
     ...
     """
     payload = {
-  "jsonrpc": "string",
-  "method": "query",
-  "params": [
-    "string"
-  ],
-  "id": "string"
-}
+        "jsonrpc": "string",
+        "method": "query",
+        "params": ["string"],
+        "id": "string",
+    }
     response_pat = await client.post(
         app.url_path_for("test-name"),
         json=payload,
@@ -55,13 +53,11 @@ async def test_post_query_failed_500(
     ...
     """
     payload = {
-  "jsonrpc": "string",
-  "method": "query",
-  "params": [
-    "string"
-  ],
-  "id": "string"
-}
+        "jsonrpc": "string",
+        "method": "query",
+        "params": ["string"],
+        "id": "string",
+    }
     response_pat = await client.post(
         app.url_path_for("test-name"),
         json=payload,
