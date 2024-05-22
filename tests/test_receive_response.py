@@ -16,7 +16,11 @@ async def test_receive_response(
     """
     ...
     """
-    payload = {"message": {"content": "some test message"}}
+    payload = {
+  "jsonrpc": "string",
+  "result": "string",
+  "id": "string"
+}
     response_pat = await client.post(
         app.url_path_for("receive-response"),
         json=payload,
@@ -35,7 +39,11 @@ async def test_receive_response_fail_500(
     """
     ...
     """
-    payload = {"message": {"content": "some test message"}}
+    payload = {
+  "jsonrpc": "string",
+  "result": "string",
+  "id": "string"
+}
     response_pat = await client.post(
         app.url_path_for("receive-response"),
         json=payload,

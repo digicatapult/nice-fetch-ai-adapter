@@ -41,6 +41,17 @@ def test_post_query_success_mock_202(mocker) -> None:
             {},
         ],
     )
+@pytest.fixture
+def test_agent_query_mock(mocker) -> None:
+    """
+    Test return data for the 202 response fromquery agent.
+    """
+    mocker.patch(
+        "routes.posts.agent_query",
+        return_value=[
+            {"Successful query response from the Sample Agent"},
+        ],
+    )
 
 
 @pytest.fixture

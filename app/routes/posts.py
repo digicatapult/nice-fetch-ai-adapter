@@ -1,21 +1,30 @@
+import json
 from datetime import datetime
 from enum import IntEnum, StrEnum
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
+from uuid import UUID
 
 import httpx
+
+# from agentQuery.agentQuery import agent_query
 from core.config import settings
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+from pydantic import Field
 from uagents import Model
+from uagents.query import query
 
 veritableUrl = settings.VERITABLE_URL
 peerUrl = settings.PEER_URL
 
+# class QueryFromPeerApi(Model):
+#     message:dict
 
-class Query(BaseModel):
-    message: dict
-
+class DrcpQueryFromPeerApi(Model): 
+  jsonrpc: str
+  method: str = Field(default="query", const=True)
+  params: List[Any]
+  id: Union[str, UUID]
 
 class DrpcRequestObject(Model):
     jsonrpc: str
@@ -60,8 +69,10 @@ class DrpcState(StrEnum):
 # RPC Response example
 # --> {"jsonrpc": "2.0", "method": "subtract", "params": [23, 42], "id": 2}
 # <-- {"jsonrpc": "2.0", "result": -19, "id": 2}
-class Response(Model):
-    message: dict
+class DrpcResponseForVeritableApi(Model):
+  jsonrpc: str
+  result: Any
+  id: Union[str, UUID]
 
 
 class DrpcEvent(Model):
@@ -78,14 +89,20 @@ class DrpcEvent(Model):
 
 router = APIRouter()
 
+AGENT_ADDRESS = 'agent1qt8q20p0vsp7y5dkuehwkpmsppvynxv8esg255fwz6el68rftvt5klpyeuj'
+async def agent_query(req):
+    response = await query(destination=AGENT_ADDRESS, message=req, timeout=15.0)
+    data = json.loads(response.decode_payload())
+    return data
 
-async def postToVeritable(req: Query) -> JSONResponse:
+
+async def postToVeritable(req: DrcpQueryFromPeerApi) -> JSONResponse:
     async with httpx.AsyncClient() as client:
         response = await client.post(f"{veritableUrl}/drcp/request", json=req)
         return [response.status, response.json()]
 
 
-async def postResponseToVeritable(req: Response) -> JSONResponse:
+async def postResponseToVeritable(req: DrpcResponseForVeritableApi) -> JSONResponse:
     async with httpx.AsyncClient() as client:
         response = client.post(f"{veritableUrl}/drcp/response", json=req)
         return [response.status, response.json()]
@@ -102,10 +119,15 @@ async def peerReceivesQuery(req: DrpcEvent) -> JSONResponse:
         response = await client.post(f"{peerUrl}/receive-query", json=req)
         return [response.status, response.json()]
 
-
+# Query from PeerApi to query agent & veritable 
 @router.post("/send-query", name="test-name", status_code=202)
-async def send_query(req: Query):  # need to define Query
+async def send_query(req: DrcpQueryFromPeerApi):  
     try:
+        agentQueryResp = await agent_query(req)
+        expected_response = [{'Successful query response from the Sample Agent'}]
+        if agentQueryResp != expected_response:
+            raise ValueError(f"Query Agent returned unexpected response. Response returned: {agentQueryResp}")
+        #do sth based on the agentQueryResponse?? 
         response = await postToVeritable(req)
         if response[0] != "202":
             raise ValueError("Response status is not 202")
@@ -156,7 +178,7 @@ async def drpc_event_handler(req: DrpcEvent):
 @router.post(
     "/receive-response", name="receive-response", status_code=200
 )  # this receives response from chainvine and it forwards info to veritable
-async def receive_response(resp: Response):  # basic RPC response
+async def receive_response(resp: DrpcResponseForVeritableApi):  # basic RPC response
     try:
         response = await postResponseToVeritable(resp)
         if response[0] != "200":
