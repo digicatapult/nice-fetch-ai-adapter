@@ -93,7 +93,6 @@ class DrpcEvent(Model):
 router = APIRouter()
 
 
-
 async def agent_query(req):
     response = await query(destination=AGENT_ADDRESS, message=req, timeout=15.0)
     data = json.loads(response.decode_payload())
