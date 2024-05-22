@@ -16,6 +16,7 @@ from uagents.query import query
 
 veritableUrl = settings.VERITABLE_URL
 peerUrl = settings.PEER_URL
+AGENT_ADDRESS = settings.AGENT_ADDRESS
 
 # class QueryFromPeerApi(Model):
 #     message:dict
@@ -91,7 +92,6 @@ class DrpcEvent(Model):
 
 router = APIRouter()
 
-AGENT_ADDRESS = "agent1qt8q20p0vsp7y5dkuehwkpmsppvynxv8esg255fwz6el68rftvt5klpyeuj"
 
 
 async def agent_query(req):
