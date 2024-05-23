@@ -28,7 +28,7 @@ The endpoints in this repository are:
 
 #### POST/send-query schema outbound:
 
--> will depend on drcp response
+-> will depend on drpc response
 for now `[202, {}]`
 
 #### POST/webhooks/drpc schema inbound:
