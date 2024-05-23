@@ -1,12 +1,83 @@
 # nice-fetch-ai-adapter
 
-The purpose of this repository is to allow interaction between nice-agent-portal (PEER API), Veritable Peer and Cmbridge's 'intelligent agent'.
+The purpose of this repository is to allow interaction between nice-agent-portal (PEER API), Veritable Peer and Cambridge's 'intelligent agent'.
+
+### Endpoints
+
 The endpoints in this repository are:
-| endpoint | usage |
-|----------|----------|
-| "/send-query" | Accepts query from Peer API, forwards it to Sample Agent & then to Veritable Peer. |
-| "/webhooks/drpc"| Accepts posts from veritable Cloudagent and passes them to PeerApi. These are either queries for peerApi or query responses for peer API. |
-| "/receive-response" | This endpoint receives information from chainvine and passes it to Veritable as a response. |
+| endpoint |HTTP Methods| usage |
+|----------|----|----------|
+| "/send-query" |POST| Accepts query from Peer API, forwards it to Sample Agent & then to Veritable Peer. |
+| "/webhooks/drpc"|POST| Accepts posts from veritable Cloudagent and passes them to PeerApi. These are either queries for peerApi or query responses for peer API. |
+| "/receive-response" |POST| This endpoint receives information from chainvine and passes it to Veritable as a response. |
+
+### Payload schemas:
+
+#### POST/send-query schema inbound:
+
+```
+{
+  "jsonrpc": "string",
+  "method": "string",
+  "params": [
+    "string"
+  ],
+  "id": "string"
+}
+```
+
+#### POST/send-query schema outbound:
+
+-> will depend on drcp response
+for now `[202, {}]`
+
+#### POST/webhooks/drpc schema inbound:
+
+- This schema can only include either `response` or `request`.
+- If `request` is present, `role` must be `server` and if `response` is present `role` must be `client`
+
+```
+{
+  "createdAt": "2024-05-23T08:23:49.183Z",
+  "request": {
+    "jsonrpc": "string",
+    "method": "string",
+    "params": [
+      "string"
+    ],
+    "id": "string"
+  },
+  "response": {
+    "jsonrpc": "string",
+    "result": "string",
+    "error": {
+      "code": -32601,
+      "message": "string",
+      "data": "string"
+    },
+    "id": "string"
+  },
+  "connectionId": "string",
+  "role": "client" OR "server",
+  "state": "request-sent",
+  "threadId": "string",
+  "id": "string"
+}
+```
+
+#### POST/webhooks/drpc schema outbound:
+
+-> status 202 request received
+
+#### POST/receive-response schema inbound:
+
+```
+{
+  "jsonrpc": "string",
+  "result": "string",
+  "id": "string"
+}
+```
 
 ### Prerequisites:
 

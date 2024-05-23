@@ -1,7 +1,5 @@
-from typing import Any, List, Union
-from uuid import UUID
+from typing import List, Optional
 
-from pydantic import Field
 from uagents import Agent, Context, Model
 from uagents.setup import fund_agent_if_low
 
@@ -10,10 +8,10 @@ class TestRequest(Model):
     message: str
 
 
-class DrcpQueryFromPeerApi(Model):
+class DrpcRequestObject(Model):
     jsonrpc: str
-    method: str = Field(default="query", const=True)
-    params: List[Any]
+    method: str
+    params: Optional[List | object]
     id: str | int
 
 
@@ -41,7 +39,7 @@ async def startup(ctx: Context):
 
 
 # query from PeerAPI
-@agent.on_query(model=DrcpQueryFromPeerApi, replies={Response})
+@agent.on_query(model=DrpcRequestObject, replies={Response})
 async def query_handler(ctx: Context, sender: str, _query: TestRequest):
     ctx.logger.info("Query received by the Sample Agent")
     try:
