@@ -75,6 +75,11 @@ for now `[202, {}]`
 {
   "jsonrpc": "string",
   "result": "string",
+  "error": {
+    "code": -32601,
+    "message": "string",
+    "data": "string"
+  },
   "id": "string"
 }
 ```

@@ -65,12 +65,14 @@ class DrpcEvent(Model):
     threadId: str
     id: str
     _tags: dict
-
+class AgentRequest(Model):
+    params: List[str]
+    id: str
 
 router = APIRouter()
 
 
-async def agent_query(req):
+async def agent_query(req:AgentRequest):
     response = await query(destination=AGENT_ADDRESS, message=req, timeout=15.0)
     data = json.loads(response.decode_payload())
     return [data]
@@ -104,7 +106,10 @@ async def peerReceivesQuery(req: DrpcEvent) -> JSONResponse:
 @router.post("/send-query", name="test-name", status_code=202)
 async def send_query(req: DrpcRequestObject):
     try:
-        agentQueryResp = await agent_query(req)
+        print(req)
+        agentRequest: AgentRequest = {"params": req.params, "id": req.id}
+        agentQueryResp = await agent_query(agentRequest)
+        print(agentQueryResp)
         expected_response = [{"text":"Successful query response from the Sample Agent"}]
         if agentQueryResp != expected_response:
             raise ValueError(

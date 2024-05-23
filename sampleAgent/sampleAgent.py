@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 
 from uagents import Agent, Context, Model
 from uagents.setup import fund_agent_if_low
@@ -8,11 +8,9 @@ class TestRequest(Model):
     message: str
 
 
-class DrpcRequestObject(Model):
-    jsonrpc: str
-    method: str
-    params: Optional[List | object]
-    id: str | int
+class AgentRequest(Model):
+    params: List[str]
+    id: str
 
 
 class Response(Model):
@@ -39,7 +37,7 @@ async def startup(ctx: Context):
 
 
 # query from PeerAPI
-@agent.on_query(model=DrpcRequestObject, replies={Response})
+@agent.on_query(model=AgentRequest, replies={Response})
 async def query_handler(ctx: Context, sender: str, _query: TestRequest):
     ctx.logger.info("Query received by the Sample Agent")
     try:
