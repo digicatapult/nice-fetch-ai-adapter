@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 from enum import IntEnum, StrEnum
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 
 import httpx
 from core.config import settings
@@ -41,7 +41,7 @@ class DrpcResponseObject(Model):
     jsonrpc: str
     result: Optional[Any]
     error: Optional[DrpcResponseError]
-    id: str | int
+    id: Union[str | int]
 
 
 class DrpcRole(StrEnum):
@@ -65,6 +65,7 @@ class DrpcEvent(Model):
     threadId: str
     id: str
     _tags: dict
+    
 class AgentRequest(Model):
     params: List[str]
     id: str
@@ -73,8 +74,13 @@ router = APIRouter()
 
 
 async def agent_query(req:AgentRequest):
+    print("=========")
+    print(req)
     response = await query(destination=AGENT_ADDRESS, message=req, timeout=15.0)
+    print("-----")
+    print(response)
     data = json.loads(response.decode_payload())
+    print(data)
     return [data]
 
 
@@ -101,27 +107,55 @@ async def peerReceivesQuery(req: DrpcEvent) -> JSONResponse:
         response = await client.post(f"{peerUrl}/receive-query", json=req)
         return [response.status, response.json()]
 
+async def create_error_response(id: Union[str, int], error_code: DrpcErrorCode, error_message: str, error_data: Optional[Any] = None) -> DrpcResponseObject:
+    return DrpcResponseObject(
+        jsonrpc="2.0",
+        id=id,
+        error=DrpcResponseError(
+            code=error_code,
+            message=error_message,
+            data=error_data
+        ),
+        result=None
+    )
 
 # Query from PeerApi to query agent & veritable
 @router.post("/send-query", name="test-name", status_code=202)
 async def send_query(req: DrpcRequestObject):
     try:
-        print(req)
-        agentRequest: AgentRequest = {"params": req.params, "id": req.id}
+        if req.method !="query":
+            raise ValueError(
+                await create_error_response(
+                id=req.id,
+                error_code=DrpcErrorCode.invalid_request,
+                error_message="Only supported method is query"
+            ))
+        agentRequest= AgentRequest(params=req.params, id=str(req.id))
+        print(type(agentRequest))
+        print(type(dict(agentRequest)))
         agentQueryResp = await agent_query(agentRequest)
         print(agentQueryResp)
         expected_response = [{"text":"Successful query response from the Sample Agent"}]
         if agentQueryResp != expected_response:
             raise ValueError(
-                f"Query Agent returned unexpected response. Response returned: {agentQueryResp}"
-            )
+                await create_error_response(
+                id=req.id,
+                error_code=DrpcErrorCode.invalid_request,
+                error_message=f"Query Agent returned unexpected response. Response returned: {agentQueryResp}"
+            ))
         # do sth based on the agentQueryResponse??
         req_dict = dict(req)
         response = await postToVeritable(req_dict)
         if response[0] != "202":
-            raise ValueError("Response status is not 202")
+            raise ValueError(
+                await create_error_response(
+                id=req.id,
+                error_code=DrpcErrorCode.invalid_request,
+                error_message="Response status is not 202"
+            ))
         return response
     except Exception as e:
+       
         raise HTTPException(status_code=500, detail=str(e))
 
 
