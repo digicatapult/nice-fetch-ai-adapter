@@ -7,11 +7,13 @@ from uagents.setup import fund_agent_if_low
 class TestRequest(Model):
     message: str
 
+
 class DrpcRequestObject(Model):
     jsonrpc: str
     method: str
     params: Optional[List | object]
     id: str | int
+
 
 class AgentRequest(Model):
     params: List[str]
@@ -48,7 +50,6 @@ async def query_handler(ctx: Context, sender: str, _query: TestRequest):
     try:
         # do something here with the _query
         ctx.logger.info(_query)
-        print("in agent")
         await ctx.send(
             sender, Response(text="Successful query response from the Sample Agent")
         )

@@ -65,15 +65,17 @@ class DrpcEvent(Model):
     threadId: str
     id: str
     _tags: dict
-    
+
+
 class AgentRequest(Model):
     params: List[str]
     id: str
 
+
 router = APIRouter()
 
 
-async def agent_query(req:AgentRequest):
+async def agent_query(req: AgentRequest):
     print("=========")
     print(req)
     response = await query(destination=AGENT_ADDRESS, message=req, timeout=15.0)
@@ -92,7 +94,7 @@ async def postToVeritable(req: DrpcRequestObject) -> JSONResponse:
 
 async def postResponseToVeritable(req: DrpcResponseObject) -> JSONResponse:
     async with httpx.AsyncClient() as client:
-        response =await  client.post(f"{veritableUrl}/drcp/response", json=req)
+        response = await client.post(f"{veritableUrl}/drcp/response", json=req)
         return [response.status, response.json()]
 
 
@@ -107,55 +109,65 @@ async def peerReceivesQuery(req: DrpcEvent) -> JSONResponse:
         response = await client.post(f"{peerUrl}/receive-query", json=req)
         return [response.status, response.json()]
 
-async def create_error_response(id: Union[str, int], error_code: DrpcErrorCode, error_message: str, error_data: Optional[Any] = None) -> DrpcResponseObject:
+
+async def create_error_response(
+    id: Union[str, int],
+    error_code: DrpcErrorCode,
+    error_message: str,
+    error_data: Optional[Any] = None,
+) -> DrpcResponseObject:
     return DrpcResponseObject(
         jsonrpc="2.0",
         id=id,
         error=DrpcResponseError(
-            code=error_code,
-            message=error_message,
-            data=error_data
+            code=error_code, message=error_message, data=error_data
         ),
-        result=None
+        result=None,
     )
+
 
 # Query from PeerApi to query agent & veritable
 @router.post("/send-query", name="test-name", status_code=202)
 async def send_query(req: DrpcRequestObject):
     try:
-        if req.method !="query":
+        if req.method != "query":
             raise ValueError(
                 await create_error_response(
-                id=req.id,
-                error_code=DrpcErrorCode.invalid_request,
-                error_message="Only supported method is query"
-            ))
-        agentRequest= AgentRequest(params=req.params, id=str(req.id))
+                    id=req.id,
+                    error_code=DrpcErrorCode.invalid_request,
+                    error_message="Only supported method is query",
+                )
+            )
+        agentRequest = AgentRequest(params=req.params, id=str(req.id))
         print(type(agentRequest))
         print(type(dict(agentRequest)))
         agentQueryResp = await agent_query(agentRequest)
         print(agentQueryResp)
-        expected_response = [{"text":"Successful query response from the Sample Agent"}]
+        expected_response = [
+            {"text": "Successful query response from the Sample Agent"}
+        ]
         if agentQueryResp != expected_response:
             raise ValueError(
                 await create_error_response(
-                id=req.id,
-                error_code=DrpcErrorCode.invalid_request,
-                error_message=f"Query Agent returned unexpected response. Response returned: {agentQueryResp}"
-            ))
+                    id=req.id,
+                    error_code=DrpcErrorCode.server_error,
+                    error_message=f"Query Agent returned unexpected response. Response returned: {agentQueryResp}",
+                )
+            )
         # do sth based on the agentQueryResponse??
         req_dict = dict(req)
         response = await postToVeritable(req_dict)
         if response[0] != "202":
             raise ValueError(
                 await create_error_response(
-                id=req.id,
-                error_code=DrpcErrorCode.invalid_request,
-                error_message="Response status is not 202"
-            ))
+                    id=req.id,
+                    error_code=DrpcErrorCode.server_error,
+                    error_message="Response status is not 202",
+                )
+            )
         return response
     except Exception as e:
-       
+
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -179,19 +191,49 @@ async def drpc_event_handler(req: DrpcEvent):
         response_check = req_dict["response"]
         role_check = req_dict["role"]
         if request_check and response_check:
-            raise ValueError("JSON body cannot contain both 'request' and 'response'")
+            raise ValueError(
+                await create_error_response(
+                    id=req.id,
+                    error_code=DrpcErrorCode.invalid_request,
+                    error_message="JSON body cannot contain both 'request' and 'response'",
+                )
+            )
         if request_check and role_check != "server":
-            raise ValueError("If 'request' is present, 'role' must be 'server'")
+            raise ValueError(
+                await create_error_response(
+                    id=req.id,
+                    error_code=DrpcErrorCode.invalid_request,
+                    error_message="If 'request' is present, 'role' must be 'server'",
+                )
+            )
         if response_check and role_check != "client":
-            raise ValueError("If 'response' is present, 'role' must be 'client'")
+            raise ValueError(
+                await create_error_response(
+                    id=req.id,
+                    error_code=DrpcErrorCode.invalid_request,
+                    error_message="If 'response' is present, 'role' must be 'client'",
+                )
+            )
         if role_check == "client":
             response = await peerReceivesResponse(req_dict)
         elif role_check == "server":
             response = await peerReceivesQuery(req_dict)
         else:
-            raise ValueError("Error in request body.")
+            raise ValueError(
+                await create_error_response(
+                    id=req.id,
+                    error_code=DrpcErrorCode.invalid_request,
+                    error_message="Error in request body.",
+                )
+            )
         if response[0] != "200":
-            raise ValueError("Response status is not 200")
+            raise ValueError(
+                await create_error_response(
+                    id=req.id,
+                    error_code=DrpcErrorCode.server_error,
+                    error_message=f"Response status from Peer Api is not 200. Response status: {response[0]} and body: {response[1]}",
+                )
+            )
         return response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -201,10 +243,16 @@ async def drpc_event_handler(req: DrpcEvent):
 @router.post("/receive-response", name="receive-response", status_code=200)
 async def receive_response(resp: DrpcResponseObject):
     try:
-        resp_dict= dict(resp)
+        resp_dict = dict(resp)
         response = await postResponseToVeritable(resp_dict)
         if response[0] != "200":
-            raise ValueError("Response status is not 200")
+            raise ValueError(
+                await create_error_response(
+                    id=resp.id,
+                    error_code=DrpcErrorCode.server_error,
+                    error_message=f"Response status from Peer Api is not 200. Response status: {response[0]} and body: {response[1]}",
+                )
+            )
         return response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
