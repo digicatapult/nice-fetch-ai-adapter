@@ -2,6 +2,15 @@
 
 The purpose of this repository is to allow interaction between nice-agent-portal (PEER API), Veritable Peer and Cambridge's 'intelligent agent'.
 
+### Envars
+
+Can be found in `core>config.py`.
+|ENV|required|default|
+|--|------|----------|
+|VERITABLE_URL|Y|http://localhost:3010|
+|PEER_URL|Y| http://localhost:3001/api|
+|AGENT_ADDRESS|Y|agent1qt8q20p0vsp7y5dkuehwkpmsppvynxv8esg255fwz6el68rftvt5klpyeuj|
+
 ### Endpoints
 
 The endpoints in this repository are:
