@@ -76,25 +76,20 @@ router = APIRouter()
 
 
 async def agent_query(req: AgentRequest):
-    print("=========")
-    print(req)
     response = await query(destination=AGENT_ADDRESS, message=req, timeout=15.0)
-    print("-----")
-    print(response)
     data = json.loads(response.decode_payload())
-    print(data)
     return [data]
 
 
 async def postToVeritable(req: DrpcRequestObject) -> JSONResponse:
     async with httpx.AsyncClient() as client:
-        response = await client.post(f"{veritableUrl}/drcp/request", json=req)
+        response = await client.post(f"{veritableUrl}/drpc/request", json=req)
         return [response.status, response.json()]
 
 
 async def postResponseToVeritable(req: DrpcResponseObject) -> JSONResponse:
     async with httpx.AsyncClient() as client:
-        response = await client.post(f"{veritableUrl}/drcp/response", json=req)
+        response = await client.post(f"{veritableUrl}/drpc/response", json=req)
         return [response.status, response.json()]
 
 
@@ -139,10 +134,7 @@ async def send_query(req: DrpcRequestObject):
                 )
             )
         agentRequest = AgentRequest(params=req.params, id=str(req.id))
-        print(type(agentRequest))
-        print(type(dict(agentRequest)))
         agentQueryResp = await agent_query(agentRequest)
-        print(agentQueryResp)
         expected_response = [
             {"text": "Successful query response from the Sample Agent"}
         ]
@@ -231,7 +223,7 @@ async def drpc_event_handler(req: DrpcEvent):
                 await create_error_response(
                     id=req.id,
                     error_code=DrpcErrorCode.server_error,
-                    error_message=f"Response status from Peer Api is not 200. Response status: {response[0]} and body: {response[1]}",
+                    error_message=f"Response status from Peer Api is not 200. Response status:{response[0]}, body: {response[1]}",
                 )
             )
         return response
@@ -250,7 +242,7 @@ async def receive_response(resp: DrpcResponseObject):
                 await create_error_response(
                     id=resp.id,
                     error_code=DrpcErrorCode.server_error,
-                    error_message=f"Response status from Peer Api is not 200. Response status: {response[0]} and body: {response[1]}",
+                    error_message=f"Response status from Peer Api is not 200. Response status:{response[0]}, body: {response[1]}",
                 )
             )
         return response
