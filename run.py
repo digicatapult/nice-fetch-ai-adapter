@@ -7,11 +7,25 @@ import time
 
 def start_uvicorn():
     os.chdir("app")
-    return subprocess.Popen([sys.executable, "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"])
+    return subprocess.Popen(
+        [
+            sys.executable,
+            "-m",
+            "uvicorn",
+            "main:app",
+            "--host",
+            "0.0.0.0",
+            "--port",
+            "8000",
+            "--reload",
+        ]
+    )
+
 
 def start_fetch_agent():
     os.chdir("..")
     return subprocess.Popen([sys.executable, "sampleAgent/sampleAgent.py"])
+
 
 def main():
     # Start Uvicorn server
@@ -25,7 +39,7 @@ def main():
 
     # Handle termination signals to gracefully shut down both processes
     def signal_handler(sig, frame):
-        print('Terminating processes...')
+        print("Terminating processes...")
         uvicorn_process.terminate()
         fetch_agent_process.terminate()
         sys.exit(0)
@@ -36,6 +50,7 @@ def main():
     # Wait for processes to complete
     uvicorn_process.wait()
     fetch_agent_process.wait()
+
 
 if __name__ == "__main__":
     main()

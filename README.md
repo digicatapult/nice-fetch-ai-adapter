@@ -15,6 +15,8 @@ The endpoints in this repository are:
 
 #### POST/send-query schema inbound:
 
+-> we only support method `query` for now
+
 ```
 {
   "jsonrpc": "string",
