@@ -93,9 +93,9 @@ for now `[202, {}]`
 
 Run `poetry install`
 
-Some endpoints require interaction with fetch.ai agent. We have included such `SampleAgent` in this repo. In order to start it (in a new terminal window), please navigate to the `SampleAgent` directory and run: `python sampleAgent.py`. On startup agent prints it's own address -> please include this address in `core/config.py`
-
-Open new terminal window, cd into app directory and run `uvicorn main:app ` which starts the app with swagger interface on `http://0.0.0.0:8000/docs`.
+Some endpoints require interaction with fetch.ai agent. We have included such `SampleAgent` in this repo.
+In order to bring up the repo run `python run.py` from your terminla (in root directory). This will bring up both the Sample fetch.ai agent and our app with swagger interface on `http://0.0.0.0:8000/docs`.
+On startup agent prints it's own address -> please include this address in `core/config.py`(if it is different to the one hardcoded there).
 
 ### To run tests:
 
