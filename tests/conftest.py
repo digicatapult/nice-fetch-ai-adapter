@@ -44,6 +44,19 @@ def test_post_query_success_mock_202(mocker) -> None:
 
 
 @pytest.fixture
+def test_agent_query_mock(mocker) -> None:
+    """
+    Test return data for the 202 response fromquery agent.
+    """
+    mocker.patch(
+        "routes.posts.agent_query",
+        return_value=[
+            {"text": "Successful query response from the Sample Agent"},
+        ],
+    )
+
+
+@pytest.fixture
 def test_receive_response_success_mock_200(mocker) -> None:
     """
     Test return data for the 200 receive response forwarding to veritable.
@@ -72,7 +85,7 @@ def test_receive_response_fail_mock_500(mocker) -> None:
 
 
 @pytest.fixture
-def test_drcp_event_handler_response_success_mock_200(mocker) -> None:
+def test_drpc_event_handler_response_success_mock_200(mocker) -> None:
     """
     Test return data for forwarding data from the "/webhooks/drpc" endpoint to /receive-response endpoint in peerAPI.
     """
@@ -86,7 +99,7 @@ def test_drcp_event_handler_response_success_mock_200(mocker) -> None:
 
 
 @pytest.fixture
-def test_drcp_event_handler_query_success_mock_200(mocker) -> None:
+def test_drpc_event_handler_query_success_mock_200(mocker) -> None:
     """
     Test return data for forwarding data from the "/webhooks/drpc" endpoint to /receive-query endpoint in peerAPI.
     """
@@ -100,7 +113,7 @@ def test_drcp_event_handler_query_success_mock_200(mocker) -> None:
 
 
 @pytest.fixture
-def test_drcp_event_handler_query_fail_mock_500(mocker) -> None:
+def test_drpc_event_handler_query_fail_mock_500(mocker) -> None:
     """
     Test failed return data for forwarding data from the "/webhooks/drpc" endpoint to /receive-query endpoint in peerAPI.
     """

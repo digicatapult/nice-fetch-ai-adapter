@@ -10,11 +10,17 @@ async def test_post_query(
     app: FastAPI,
     client: AsyncClient,
     test_post_query_success_mock_202,
+    test_agent_query_mock,
 ) -> None:
     """
     ...
     """
-    payload = {"message": {"content": "some test message"}}
+    payload = {
+        "jsonrpc": "string",
+        "method": "query",
+        "params": ["string"],
+        "id": "string",
+    }
     response_pat = await client.post(
         app.url_path_for("test-name"),
         json=payload,
@@ -23,8 +29,6 @@ async def test_post_query(
 
 
 # sad path tests
-
-
 async def test_post_query_wrong_body(
     app: FastAPI,
     client: AsyncClient,
@@ -48,7 +52,12 @@ async def test_post_query_failed_500(
     """
     ...
     """
-    payload = {"message": {"content": "some test message"}}
+    payload = {
+        "jsonrpc": "string",
+        "method": "query",
+        "params": ["string"],
+        "id": "string",
+    }
     response_pat = await client.post(
         app.url_path_for("test-name"),
         json=payload,

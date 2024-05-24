@@ -6,10 +6,10 @@ pytestmark = pytest.mark.asyncio
 
 
 # happy path tests
-async def test_drcp_event_handler_response(
+async def test_drpc_event_handler_response(
     app: FastAPI,
     client: AsyncClient,
-    test_drcp_event_handler_response_success_mock_200,
+    test_drpc_event_handler_response_success_mock_200,
 ) -> None:
     """
     ...
@@ -35,10 +35,10 @@ async def test_drcp_event_handler_response(
     assert response_pat.status_code == status.HTTP_200_OK
 
 
-async def test_drcp_event_handler_query(
+async def test_drpc_event_handler_query(
     app: FastAPI,
     client: AsyncClient,
-    test_drcp_event_handler_query_success_mock_200,
+    test_drpc_event_handler_query_success_mock_200,
 ) -> None:
     """
     ...
@@ -114,7 +114,7 @@ async def test_receive_response_500(
     assert response_pat.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
 
 
-async def test_drcp_event_handler_query_wrong_role(
+async def test_drpc_event_handler_query_wrong_role(
     app: FastAPI,
     client: AsyncClient,
 ) -> None:
@@ -142,7 +142,7 @@ async def test_drcp_event_handler_query_wrong_role(
     assert response_pat.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
 
 
-async def test_drcp_event_handler_response_wrong_role(
+async def test_drpc_event_handler_response_wrong_role(
     app: FastAPI,
     client: AsyncClient,
 ) -> None:
@@ -170,10 +170,10 @@ async def test_drcp_event_handler_response_wrong_role(
     assert response_pat.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
 
 
-async def test_drcp_event_handler_query_fail_500(
+async def test_drpc_event_handler_query_fail_500(
     app: FastAPI,
     client: AsyncClient,
-    test_drcp_event_handler_query_fail_mock_500,
+    test_drpc_event_handler_query_fail_mock_500,
 ) -> None:
     """
     ...
