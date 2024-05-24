@@ -19,19 +19,16 @@ The endpoints in this repository are:
 
 ```
 {
-  "jsonrpc": "string",
-  "method": "string",
-  "params": [
-    "string"
-  ],
+  "jsonrpc": "2.0",
+  "method": "query",
+  "params": [{<query json object>}],
   "id": "string"
 }
 ```
 
 #### POST/send-query schema outbound:
 
--> will depend on drpc response
-for now `[202, {}]`
+-> status 202 request received
 
 #### POST/webhooks/drpc schema inbound:
 
@@ -42,22 +39,20 @@ for now `[202, {}]`
 {
   "createdAt": "2024-05-23T08:23:49.183Z",
   "request": {
-    "jsonrpc": "string",
-    "method": "string",
-    "params": [
-      "string"
-    ],
+    "jsonrpc": "2.0",
+    "method": "query",
+    "params": [{<query json object>}],
     "id": "string"
   },
   "response": {
-    "jsonrpc": "string",
-    "result": "string",
+    "jsonrpc": "2.0",
+    "result": {<response json object>},
     "error": {
       "code": -32601,
       "message": "string",
       "data": "string"
     },
-    "id": "string"
+    "id": <must match request.id>
   },
   "connectionId": "string",
   "role": "client" OR "server",
@@ -75,16 +70,21 @@ for now `[202, {}]`
 
 ```
 {
-  "jsonrpc": "string",
-  "result": "string",
-  "error": {
+  jsonrpc: '2.0',
+  result: {<response json object>},
+  id: <must match request.id>
+    "error": {
     "code": -32601,
     "message": "string",
     "data": "string"
   },
-  "id": "string"
 }
+
 ```
+
+#### POST/receive-response schema outbound:
+
+-> status 202 request received
 
 ### Prerequisites:
 
@@ -96,7 +96,7 @@ for now `[202, {}]`
 Run `poetry install`
 
 Some endpoints require interaction with fetch.ai agent. We have included such `SampleAgent` in this repo.
-In order to bring up the repo run `python run.py` from your terminla (in root directory). This will bring up both the Sample fetch.ai agent and our app with swagger interface on `http://0.0.0.0:8000/docs`.
+In order to bring up the repo run `python run.py` from your terminal (in root directory). This will bring up both the Sample fetch.ai agent and our app with swagger interface on `http://0.0.0.0:8000/docs`.
 On startup agent prints it's own address -> please include this address in `core/config.py`(if it is different to the one hardcoded there).
 
 ### To run tests:
