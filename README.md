@@ -110,7 +110,7 @@ On startup agent prints it's own address -> please include this address in `core
 
 ### To run as a docker container
 
-Run `docker-compose build` & `docker-compose up`
+Run `docker build -t my-app .` & `docker run --rm -it my-app `
 
 ### To run tests:
 
