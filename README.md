@@ -108,6 +108,10 @@ Some endpoints require interaction with fetch.ai agent. We have included such `S
 In order to bring up the repo run `python run.py` from your terminal (in root directory). This will bring up both the Sample fetch.ai agent and our app with swagger interface on `http://0.0.0.0:8000/docs`.
 On startup agent prints it's own address -> please include this address in `core/config.py`(if it is different to the one hardcoded there).
 
+### To run as a docker container
+
+Run `docker-compose build` & `docker-compose up`
+
 ### To run tests:
 
 `poetry run pytest -s`
