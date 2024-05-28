@@ -110,7 +110,7 @@ On startup agent prints it's own address -> please include this address in `core
 
 ### To run as a docker container
 
-Run `docker build -t my-app .` & `docker run --rm -it my-app `
+Run `docker build -t nice-fetch-ai-adapter .` & `docker run --rm -it nice-fetch-ai-adapter`
 
 ### To run tests:
 
