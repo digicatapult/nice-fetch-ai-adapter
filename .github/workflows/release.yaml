@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Check token
@@ -33,10 +33,10 @@ jobs:
     name: Run lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install poetry
         run: pipx install poetry
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: poetry
@@ -48,10 +48,10 @@ jobs:
     name: Run tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install poetry
         run: pipx install poetry
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: poetry
@@ -69,7 +69,7 @@ jobs:
       is_prerelease: ${{ steps.get_version.outputs.IS_PRERELEASE }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Check version
         id: get_version
         uses: digicatapult/check-version@v1
@@ -84,7 +84,7 @@ jobs:
     if: ${{ needs.check-version.outputs.is_new_version == 'true' }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       # Docker build
       - name: Setup QEMU
